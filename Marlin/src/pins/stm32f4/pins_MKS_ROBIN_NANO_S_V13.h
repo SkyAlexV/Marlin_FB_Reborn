@@ -21,16 +21,29 @@
  */
 #pragma once
 
-//#define ALLOW_STM32DUINO
+#define ALLOW_STM32DUINO
 #include "env_validate.h"
 
 #if HOTENDS > 2 || E_STEPPERS > 2
   #error "MKS Robin Nano-S V1.3 supports up to 2 hotends / E-steppers."
 #endif
 
+#define BOARD_NO_NATIVE_USB
+
 #define BOARD_INFO_NAME "MKS Robin Nano-S V1.3"
 
-//#define EXT_EXTRUDER_DRIVER 0 // Если нужен сменный драйвер в слоте второго экструдера как основной экструдер, установить в единицу!
+//
+// EEPROM
+//
+#if ENABLED(SRAM_EEPROM_EMULATION)
+  #undef NO_EEPROM_SELECTED
+#endif
+#if EITHER(NO_EEPROM_SELECTED, FLASH_EEPROM_EMULATION)
+  #define FLASH_EEPROM_EMULATION
+  #define EEPROM_PAGE_SIZE     (0x800U) // 2KB
+  #define EEPROM_START_ADDRESS (0x8000000UL + (STM32_FLASH_SIZE) * 1024UL - (EEPROM_PAGE_SIZE) * 2UL)
+  #define MARLIN_EEPROM_SIZE    EEPROM_PAGE_SIZE  // 2KB
+#endif
 
 #define SPI_DEVICE                             2
 
@@ -40,6 +53,9 @@
 // Servos
 //
 #define SERVO0_PIN                          PA8   // Enable BLTOUCH
+
+// Avoid conflict with TIMER_SERVO when using the STM32 HAL
+// #define TEMP_TIMER                             5
 
 //
 // Limit Switches
@@ -65,51 +81,49 @@
 #define Z_STEP_PIN                          PB5
 #define Z_DIR_PIN                           PB4
 
-#if EXT_EXTRUDER_DRIVER
-#define E0_ENABLE_PIN                       PA3
-#define E0_STEP_PIN                         PA6
-#define E0_DIR_PIN                          PA1
+
+#if ENABLED(SWAP_Z_E_PINS)
+  #define E0_ENABLE_PIN                       PA3
+  #define E0_STEP_PIN                         PA6
+  #define E0_DIR_PIN                          PA1
+
+  #define Z2_ENABLE_PIN                       PB3
+  #define Z2_STEP_PIN                         PD6
+  #define Z2_DIR_PIN                          PD3
 #else
-#define E0_ENABLE_PIN                       PB3
-#define E0_STEP_PIN                         PD6
-#define E0_DIR_PIN                          PD3
-#endif
-#ifndef E0_CS_PIN
-  #define E0_CS_PIN                         PD9
+  #define E0_ENABLE_PIN                       PB3
+  #define E0_STEP_PIN                         PD6
+  #define E0_DIR_PIN                          PD3
+
+  #define Z2_ENABLE_PIN                       PA3
+  #define Z2_STEP_PIN                         PA6
+  #define Z2_DIR_PIN                          PA1
 #endif
 
-#ifndef EXT_EXTRUDER_DRIVER
-#define E1_ENABLE_PIN                       PA3
-#define E1_STEP_PIN                         PA6
-#define E1_DIR_PIN                          PA1
-#else
-//#define E1_ENABLE_PIN                     PA3
-//#define E1_STEP_PIN                       PA6
-//#define E1_DIR_PIN                        PA1
-#endif
+
 
 #if HAS_TMC_UART
   //
   // Software serial
   // No Hardware serial for steppers
   //
-  #define X_SERIAL_TX_PIN                   PA6
-  #define X_SERIAL_RX_PIN                   PA1
+  #define X_SERIAL_TX_PIN                   PC15
+  #define X_SERIAL_RX_PIN                   PC15
 
-  #define Y_SERIAL_TX_PIN                   PA6
-  #define Y_SERIAL_RX_PIN                   PA1
+  #define Y_SERIAL_TX_PIN                   PC14
+  #define Y_SERIAL_RX_PIN                   PC14
 
-  #define Z_SERIAL_TX_PIN                   PA6
-  #define Z_SERIAL_RX_PIN                   PA1
+  // #define Z_SERIAL_TX_PIN                   PC14
+  // #define Z_SERIAL_RX_PIN                   PC14
 
-  #define E0_SERIAL_TX_PIN                  PA6
-  #define E0_SERIAL_RX_PIN                  PA1
+  #define E0_SERIAL_TX_PIN                  PC14
+  #define E0_SERIAL_RX_PIN                  PC14
 
-  #define E1_SERIAL_TX_PIN                  PA6
-  #define E1_SERIAL_RX_PIN                  PA1
+  // #define E1_SERIAL_TX_PIN                  PC14
+  // #define E1_SERIAL_RX_PIN                  PC14
 
   // Reduce baud rate to improve software serial reliability
-  #define TMC_BAUD_RATE                    19200
+  #define TMC_BAUD_RATE                    31250
 #endif
 
 //
@@ -122,17 +136,45 @@
 //
 // Heaters / Fans
 //
-#define HEATER_0_PIN                        PC3   // HEATER1
-#define HEATER_1_PIN                        PB0   // HEATER2
-#define HEATER_BED_PIN                      PA0   // HOT BED
-
-#define FAN_PIN                             PB1  // NOZZLE FAN
-#define FAN1_PIN                            PB0  // HEATSINK FAN
+#ifndef HEATER_0_PIN
+  #define HEATER_0_PIN                      PC3
+#endif
+#if HOTENDS == 1 && DISABLED(HEATERS_PARALLEL)
+  #ifndef FAN1_PIN
+    #define FAN1_PIN                        PB0
+  #endif
+#else
+  #ifndef HEATER_1_PIN
+    #define HEATER_1_PIN                    PB0
+  #endif
+#endif
+#ifndef FAN_PIN
+  #define FAN_PIN                           PB1   // FAN
+#endif
+#ifndef HEATER_BED_PIN
+  #define HEATER_BED_PIN                    PA0
+#endif
 //
 // Thermocouples
 //
 //#define TEMP_0_CS_PIN             HEATER_0_PIN  // TC1 - CS1
 //#define TEMP_0_CS_PIN             HEATER_1_PIN  // TC2 - CS2
+
+//
+// Power Supply Control
+//
+#if ENABLED(MKS_PWC)
+  #if ENABLED(TFT_LVGL_UI)
+    #undef PSU_CONTROL
+    #undef MKS_PWC
+    #define SUICIDE_PIN                     PB2
+    #define SUICIDE_PIN_STATE               LOW
+  #else
+    #define PS_ON_PIN                       PB2   // PW_OFF
+  #endif
+  #define KILL_PIN                          PA2
+  #define KILL_PIN_STATE                    HIGH
+#endif
 
 //
 // Misc. Functions
@@ -153,38 +195,33 @@
 #endif
 
 #define SDIO_SUPPORT
-#define SDIO_CLOCK                       4500000  
+#define SDIO_CLOCK                       4500000
 #define SD_DETECT_PIN                       PD12
+#define ONBOARD_SD_CS_PIN                   PC11
 
 #define BEEPER_PIN                          PC5
 
-//Touch screen
-#define TOUCH_CS_PIN                      PA7   // SPI2_NSS
-#define TOUCH_SCK_PIN                     PB13  // SPI2_SCK
-#define TOUCH_MISO_PIN                    PB14  // SPI2_MISO
-#define TOUCH_MOSI_PIN                    PB15  // SPI2_MOSI
-
-#ifndef XPT2046_X_CALIBRATION
-  #define XPT2046_X_CALIBRATION          17880
-#endif
-#ifndef XPT2046_Y_CALIBRATION
-  #define XPT2046_Y_CALIBRATION         -12234
-#endif
-#ifndef XPT2046_X_OFFSET
-  #define XPT2046_X_OFFSET                 -45
-#endif
-#ifndef XPT2046_Y_OFFSET
-  #define XPT2046_Y_OFFSET                  349
-#endif
 
 
-
+//
+// TFT with FSMC interface
+//
 #if HAS_FSMC_TFT
-  // #define DOGLCD_MOSI                       -1    // Prevent auto-define by Conditionals_post.h
-  // #define DOGLCD_SCK                        -1
-
+  /**
+   * Note: MKS Robin TFT screens use various TFT controllers.
+   * If the screen stays white, disable 'TFT_RESET_PIN'
+   * to let the bootloader init the screen.
+   */
   #define TFT_RESET_PIN                     PC6   // FSMC_RST
   #define TFT_BACKLIGHT_PIN                 PD13
+
+  #define DOGLCD_MOSI                       -1    // Prevent auto-define by Conditionals_post.h
+  #define DOGLCD_SCK                        -1
+
+  #define TOUCH_CS_PIN                      PA7   // SPI2_NSS
+  #define TOUCH_SCK_PIN                     PB13  // SPI2_SCK
+  #define TOUCH_MISO_PIN                    PB14  // SPI2_MISO
+  #define TOUCH_MOSI_PIN                    PB15  // SPI2_MOSI
 
   #define LCD_USE_DMA_FSMC                        // Use DMA transfers to send data to the TFT
   #define FSMC_CS_PIN                       PD7
@@ -195,7 +232,10 @@
   #define TFT_CS_PIN                 FSMC_CS_PIN
   #define TFT_RS_PIN                 FSMC_RS_PIN
 
-  #define TFT_BUFFER_SIZE                  480*30
+  #define TOUCH_BUTTONS_HW_SPI
+  #define TOUCH_BUTTONS_HW_SPI_DEVICE          2
+
+  #define TFT_BUFFER_SIZE                  14400
 #endif
 
 
@@ -203,10 +243,10 @@
 #define HAS_SPI_FLASH                          1
 #if HAS_SPI_FLASH
   #define SPI_FLASH_SIZE               0x1000000  // 16MB
-  #define W25QXX_CS_PIN                     PB12
-  #define W25QXX_MOSI_PIN                   PB15
-  #define W25QXX_MISO_PIN                   PB14
-  #define W25QXX_SCK_PIN                    PB13
+  #define SPI_FLASH_CS_PIN                  PB12
+  #define SPI_FLASH_MOSI_PIN                PB15
+  #define SPI_FLASH_MISO_PIN                PB14
+  #define SPI_FLASH_SCK_PIN                 PB13
 #endif
 
 /*
@@ -220,10 +260,8 @@
  #define MKS_WIFI_UART                      USART1
   #undef PLATFORM_M997_SUPPORT
 
-#ifdef MKS_WIFI_IO0
-  #undef MKS_WIFI_IO0
-  #define MKS_WIFI_IO0                       PC13
-#endif
+
+ #define MKS_WIFI_IO0                       PC13
  #define MKS_WIFI_IO4                       PC7
  #define MKS_WIFI_IO_RST                    PA5
 #endif

@@ -247,4 +247,26 @@
  #define MKS_WIFI_IO_RST                    PA5
 #endif
 
+#if HAS_TMC_UART
+  //
+  // Software serial
+  // No Hardware serial for steppers
+  //
+  #define X_SERIAL_TX_PIN                   PC15
+  #define X_SERIAL_RX_PIN                   PC15
 
+  #define Y_SERIAL_TX_PIN                   PC14
+  #define Y_SERIAL_RX_PIN                   PC14
+
+  // #define Z_SERIAL_TX_PIN                   PC14
+  // #define Z_SERIAL_RX_PIN                   PC14
+
+  #define E0_SERIAL_TX_PIN                  PC14
+  #define E0_SERIAL_RX_PIN                  PC14
+
+  // #define E1_SERIAL_TX_PIN                  PC14
+  // #define E1_SERIAL_RX_PIN                  PC14
+
+  // Reduce baud rate to improve software serial reliability
+  #define TMC_BAUD_RATE                    31250
+#endif

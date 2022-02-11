@@ -281,18 +281,18 @@ void menu_main() {
   #endif
 
   if (busy) {
-    #if MACHINE_CAN_PAUSE
-      ACTION_ITEM(MSG_PAUSE_PRINT, ui.pause_print);
-    #endif
-    #if MACHINE_CAN_STOP
-      SUBMENU(MSG_STOP_PRINT, []{
-        MenuItem_confirm::select_screen(
-          GET_TEXT(MSG_BUTTON_STOP), GET_TEXT(MSG_BACK),
-          ui.abort_print, nullptr,
-          GET_TEXT(MSG_STOP_PRINT), (const char *)nullptr, PSTR("?")
-        );
-      });
-    #endif
+    // #if MACHINE_CAN_PAUSE
+    //   ACTION_ITEM(MSG_PAUSE_PRINT, ui.pause_print);
+    // #endif
+    // #if MACHINE_CAN_STOP
+    //   SUBMENU(MSG_STOP_PRINT, []{
+    //     MenuItem_confirm::select_screen(
+    //       GET_TEXT(MSG_BUTTON_STOP), GET_TEXT(MSG_BACK),
+    //       ui.abort_print, nullptr,
+    //       GET_TEXT(MSG_STOP_PRINT), (const char *)nullptr, PSTR("?")
+    //     );
+    //   });
+    // #endif
 
     #if ENABLED(GCODE_REPEAT_MARKERS)
       if (repeat.is_active())
@@ -311,8 +311,8 @@ void menu_main() {
       sdcard_menu_items();
     #endif
 
-    if (TERN0(MACHINE_CAN_PAUSE, printingIsPaused()))
-      ACTION_ITEM(MSG_RESUME_PRINT, ui.resume_print);
+    // if (TERN0(MACHINE_CAN_PAUSE, printingIsPaused()))
+    //   ACTION_ITEM(MSG_RESUME_PRINT, ui.resume_print);
 
     #if ENABLED(HOST_START_MENU_ITEM) && defined(ACTION_ON_START)
       ACTION_ITEM(MSG_HOST_START_PRINT, hostui.start);
@@ -324,7 +324,7 @@ void menu_main() {
 
     SUBMENU(MSG_MOTION, menu_motion);
 
-    #if ENABLED(RS_ADDSETTINGS)
+    #if ENABLED(PSU_CONTROL)
       EDIT_ITEM(bool, MSG_POWEROFF_AT_END, &extra_settings.poweroff_at_printed);
     #endif  // RS_ADDSETTINGS
 

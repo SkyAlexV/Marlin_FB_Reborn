@@ -773,7 +773,7 @@ void menu_advanced_settings() {
     EDIT_ITEM(bool, MSG_X_INVERT, &planner.invert_axis.invert_axis[X_AXIS]);
     EDIT_ITEM(bool, MSG_Y_INVERT, &planner.invert_axis.invert_axis[Y_AXIS]);
     EDIT_ITEM(bool, MSG_Z1_INVERT, &planner.invert_axis.invert_axis[Z_AXIS]);
-    EDIT_ITEM(bool, MSG_Z2_INVERT, &planner.invert_axis.z2_vs_z_dir);
+    // EDIT_ITEM(bool, MSG_Z2_INVERT, &planner.invert_axis.z2_vs_z_dir);
     EDIT_ITEM(bool, MSG_E_INVERT, &planner.invert_axis.invert_axis[E0_AXIS]);
 
     END_MENU();

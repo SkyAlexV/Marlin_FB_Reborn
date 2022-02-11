@@ -106,6 +106,14 @@
 
 #endif // BABYSTEPPING
 
+#if ENABLED(FWRETRACT)
+
+  #include "../../feature/fwretract.h"
+
+  void menu_config_retract();
+
+#endif
+
 void menu_tune() {
   START_MENU();
   // BACK_ITEM(MSG_MAIN);
@@ -115,14 +123,14 @@ void menu_tune() {
   //
   //EDIT_ITEM(int3, MSG_SPEED, &feedrate_percentage, 10, 500);
 
-  #if HAS_EXTRUDERS
+    #if HAS_EXTRUDERS
     //
     // Flow:
     //
     //EDIT_ITEM(int3, MSG_FLOW, &planner.flow_percentage[active_extruder], 50, 200, []{ planner.refresh_e_factor(active_extruder); });
 
     // Flow En:
-    #if HAS_MULTI_EXTRUDER
+     #if HAS_MULTI_EXTRUDER
       LOOP_L_N(n, EXTRUDERS)
         EDIT_ITEM_N(int3, n, MSG_FLOW_N, &planner.flow_percentage[n], 10, 999, []{ planner.refresh_e_factor(MenuItemBase::itemIndex); });
     #endif
@@ -131,7 +139,7 @@ void menu_tune() {
     // Retract length
     //
     #if ENABLED(FWRETRACT)
-      EDIT_ITEM(float52sign, MSG_CONTROL_RETRACT, &fwretract.settings.retract_length, 0, 20);
+      SUBMENU(MSG_RETRACT, menu_config_retract);
     #endif
   #endif
 
@@ -244,7 +252,7 @@ void menu_tune() {
   #endif // HAS_FAN
 */
 
-  #if ENABLED(RS_ADDSETTINGS)
+  #if ENABLED(PSU_CONTROL)
     EDIT_ITEM(bool, MSG_POWEROFF_AT_END, &extra_settings.poweroff_at_printed);
   #endif  // RS_ADDSETTINGS
 

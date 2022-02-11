@@ -151,7 +151,7 @@
 //#define BLUETOOTH
 
 // Name displayed in the LCD "Ready" message and Info menu
-#define CUSTOM_MACHINE_NAME "FlyingBear Reborn"
+#define CUSTOM_MACHINE_NAME "Ghost5"
 
 // Printer's unique ID, used by some programs to differentiate between machines.
 // Choose your own or use a service like https://www.uuidgenerator.net/version4
@@ -370,8 +370,8 @@
  * Enable and connect the power supply to the PS_ON_PIN.
  * Specify whether the power supply is active HIGH or active LOW.
  */
-#define PSU_CONTROL
-#define PSU_NAME "Power Supply"
+// #define PSU_CONTROL
+// #define PSU_NAME "Power Supply"
 
 #if ENABLED(PSU_CONTROL)
   #define MKS_PWC                 // Using the MKS PWC add-on
@@ -625,9 +625,9 @@
       #define DEFAULT_Ki 0.5
       #define DEFAULT_Kd 125.0
     #else
-      #define DEFAULT_Kp 9.91
-      #define DEFAULT_Ki 0.55
-      #define DEFAULT_Kd 44.99
+      #define DEFAULT_Kp  17.4
+      #define DEFAULT_Ki  1.37
+      #define DEFAULT_Kd  55.6
     #endif
 
     // #define DEFAULT_Kp  22.20
@@ -663,7 +663,7 @@
  * When set to any value below 255, enables a form of PWM to the bed that acts like a divider
  * so don't use it unless you are OK with PWM on your bed. (See the comment on enabling PIDTEMPBED)
  */
-#define MAX_BED_POWER 235 // limits duty cycle to bed; 255=full current
+#define MAX_BED_POWER 255 // limits duty cycle to bed; 255=full current
 
 #if ENABLED(PIDTEMPBED)
   //#define MIN_BED_POWER 0
@@ -671,9 +671,9 @@
 
   // 120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   // from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
-  #define DEFAULT_bedKp 60.35
-  #define DEFAULT_bedKi 9.55
-  #define DEFAULT_bedKd 254.26
+  #define DEFAULT_bedKp 36.3
+  #define DEFAULT_bedKi 6.82
+  #define DEFAULT_bedKd 128.6
 
   // #define DEFAULT_bedKp 10.00
   // #define DEFAULT_bedKi .023
@@ -783,7 +783,7 @@
 
 // Enable one of the options below for CoreXY, CoreXZ, or CoreYZ kinematics,
 // either in the usual order or reversed
-#define COREXY
+// #define COREXY
 //#define COREXZ
 //#define COREYZ
 //#define COREYX
@@ -819,7 +819,7 @@
 //#define USE_KMIN_PLUG
 //#define USE_XMAX_PLUG
 //#define USE_YMAX_PLUG
-#define USE_ZMAX_PLUG
+// #define USE_ZMAX_PLUG
 //#define USE_IMAX_PLUG
 //#define USE_JMAX_PLUG
 //#define USE_KMAX_PLUG
@@ -900,13 +900,13 @@
 #define Z_DRIVER_TYPE  TMC2208_STANDALONE
 //#define X2_DRIVER_TYPE A4988
 //#define Y2_DRIVER_TYPE A4988
-#define Z2_DRIVER_TYPE TMC2208_STANDALONE
+// #define Z2_DRIVER_TYPE TMC2208
 //#define Z3_DRIVER_TYPE A4988
 //#define Z4_DRIVER_TYPE A4988
 //#define I_DRIVER_TYPE  A4988
 //#define J_DRIVER_TYPE  A4988
 //#define K_DRIVER_TYPE  A4988
-#define E0_DRIVER_TYPE TMC2208_STANDALONE
+#define E0_DRIVER_TYPE TMC2209_STANDALONE
 //#define E1_DRIVER_TYPE A4988
 //#define E2_DRIVER_TYPE A4988
 //#define E3_DRIVER_TYPE A4988
@@ -976,11 +976,11 @@
  * Override with M203
  *                                      X, Y, Z [, I [, J [, K]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 250, 250, 50, 25 }
+#define DEFAULT_MAX_FEEDRATE          { 200, 200, 10, 40 }
 
 #define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
-  #define MAX_FEEDRATE_EDIT_VALUES    { 400, 400, 100, 50 } // ...or, set your own edit limits
+  #define MAX_FEEDRATE_EDIT_VALUES    { 400, 400, 20, 80 } // ...or, set your own edit limits
 #endif
 
 /**
@@ -989,11 +989,11 @@
  * Override with M201
  *                                      X, Y, Z [, I [, J [, K]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_ACCELERATION      { 1500, 1500, 200, 10000 }
+#define DEFAULT_MAX_ACCELERATION      { 1500, 1500, 100, 3000 }
 
 #define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
 #if ENABLED(LIMITED_MAX_ACCEL_EDITING)
-  #define MAX_ACCEL_EDIT_VALUES       { 4000, 4000, 300, 15000 } // ...or, set your own edit limits
+  #define MAX_ACCEL_EDIT_VALUES       { 3000, 3000, 200, 6000 } // ...or, set your own edit limits
 #endif
 
 /**
@@ -1006,7 +1006,7 @@
  */
 #define DEFAULT_ACCELERATION          1500    // X, Y, Z and E acceleration for printing moves
 #define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts
-#define DEFAULT_TRAVEL_ACCELERATION   2000    // X, Y, Z acceleration for travel (non printing) moves
+#define DEFAULT_TRAVEL_ACCELERATION   1500    // X, Y, Z acceleration for travel (non printing) moves
 
 /**
  * Default Jerk limits (mm/s)
@@ -1033,7 +1033,7 @@
   #endif
 #endif
 
-#define DEFAULT_EJERK    10.0  // May be used by Linear Advance
+#define DEFAULT_EJERK    8.0  // May be used by Linear Advance
 
 /**
  * Junction Deviation Factor
@@ -1374,11 +1374,11 @@
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
 #if ENABLED(MOTHERBOARD_SV1_3)
   #define INVERT_X_DIR true
-  #define INVERT_Y_DIR false
+  #define INVERT_Y_DIR true
   #define INVERT_Z_DIR false
 #else
 #define INVERT_X_DIR false
-#define INVERT_Y_DIR true
+#define INVERT_Y_DIR false
   #define INVERT_Z_DIR true
 #endif
 //#define INVERT_I_DIR false
@@ -1389,7 +1389,7 @@
 
 // For direct drive extruder v9 set to true, for geared extruder set to false.
 #if ENABLED(MOTHERBOARD_SV1_3)
-  
+
 //  #define SWAP_Z_E_PINS
 
   #ifdef SWAP_Z_E_PINS
@@ -1423,7 +1423,7 @@
 //#define Z_HOMING_HEIGHT  4      // (mm) Minimal Z height before homing (G28) for Z clearance above the bed, clamps, ...
                                   // Be sure to have this much clearance over your Z_MAX_POS to prevent grinding.
 
-//#define Z_AFTER_HOMING  10      // (mm) Height to move to after homing Z
+#define Z_AFTER_HOMING  20      // (mm) Height to move to after homing Z
 
 // Direction of endstops when homing; 1=MAX, -1=MIN
 // :[-1,1]
@@ -1437,16 +1437,16 @@
 // @section machine
 
 // The size of the printable area
-#define X_BED_SIZE 350
-#define Y_BED_SIZE 310
+#define X_BED_SIZE 255
+#define Y_BED_SIZE 210
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
 #define X_MIN_POS 0
-#define Y_MIN_POS 0
+#define Y_MIN_POS -4
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE
 #define Y_MAX_POS Y_BED_SIZE
-#define Z_MAX_POS 350
+#define Z_MAX_POS 210
 //#define I_MIN_POS 0
 //#define I_MAX_POS 50
 //#define J_MIN_POS 0
@@ -2271,8 +2271,8 @@ EEPROM_W25Q
 // Note: Test audio output with the G-Code:
 //  M300 S<frequency Hz> P<duration ms>
 //
-#define LCD_FEEDBACK_FREQUENCY_DURATION_MS 100
-#define LCD_FEEDBACK_FREQUENCY_HZ 1000
+//#define LCD_FEEDBACK_FREQUENCY_DURATION_MS 2
+//#define LCD_FEEDBACK_FREQUENCY_HZ 5000
 
 //=============================================================================
 //======================== LCD / Controller Selection =========================
@@ -2855,7 +2855,7 @@ EEPROM_W25Q
  *   TFT_ROTATE_270, TFT_ROTATE_270_MIRROR_X, TFT_ROTATE_270_MIRROR_Y,
  *   TFT_MIRROR_X, TFT_MIRROR_Y, TFT_NO_ROTATION
  */
-#define TFT_ROTATION TFT_ROTATE_180
+#define TFT_ROTATION TFT_NO_ROTATION
 
 //=============================================================================
 //============================  Other Controllers  ============================
