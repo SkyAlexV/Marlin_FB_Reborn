@@ -456,7 +456,7 @@
 
 // The number of consecutive low temperature errors that can occur
 // before a min_temp_error is triggered. (Shouldn't be more than 10.)
-#ifdef HIGH_TEMPERATURE_MODE
+#if ENABLED(RS_ADDSETTINGS)
   #define MAX_CONSECUTIVE_LOW_TEMPERATURE_ERROR_ALLOWED 5
 #endif
 
@@ -465,7 +465,7 @@
 // hot end to reach the target temperature, but the time it takes to reach
 // the minimum temperature your thermistor can read. The lower the better/safer.
 // This shouldn't need to be more than 30 seconds (30000)
-#ifdef HIGH_TEMPERATURE_MODE
+#if ENABLED(RS_ADDSETTINGS)
   #define MILLISECONDS_PREHEAT_TIME 15000
 #endif
 
@@ -621,11 +621,7 @@
 #define COOLER_AUTO_FAN_PIN -1
 #define COOLER_FAN_PIN -1
 
-#ifdef HIGH_TEMPERATURE_MODE
-  #define EXTRUDER_AUTO_FAN_TEMPERATURE 85
-#else
 #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
-#endif
 #define EXTRUDER_AUTO_FAN_SPEED 255   // 255 == full speed
 #define CHAMBER_AUTO_FAN_TEMPERATURE 30
 #define CHAMBER_AUTO_FAN_SPEED 255
