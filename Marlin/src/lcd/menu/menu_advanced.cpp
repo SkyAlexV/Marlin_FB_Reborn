@@ -197,7 +197,7 @@ void menu_backlash();
       #endif
       default: tune_temp = autotune_temp[hid]; break;
     }
-    sprintf_P(cmd, PSTR("M303 U1 E%i S%i"), hid, tune_temp);
+    sprintf_P(cmd, PSTR("M303 C10 U1 E%i S%i"), hid, tune_temp);
     queue.inject(cmd);
     ui.return_to_status();
   }
@@ -264,6 +264,9 @@ void menu_backlash();
       if (therm_num < 255)
       {
         thermistors_data.heater_type[therm_num] = type;
+        thermistors_data.fan_auto_temp[therm_num] = thermistor_types[type].fan_auto_temp;
+        thermistors_data.high_temp[therm_num] = thermistor_types[type].high_temp;
+        thermalManager.hotend_maxtemp[therm_num] = thermistor_types[type].max_temp;
       }
       else
       {
@@ -442,6 +445,7 @@ void menu_backlash();
 
     #if ENABLED(RS_ADDSETTINGS)
       SUBMENU(MSG_MENU_THERMISTORS, menu_advanced_thermistors);
+      EDIT_ITEM(int3, MSG_HOTEND_AUTO_FAN, &thermistors_data.fan_auto_temp[0], 20, thermalManager.hotend_maxtemp[0]);
     #endif
 
     END_MENU();

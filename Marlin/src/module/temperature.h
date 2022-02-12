@@ -48,6 +48,34 @@
 #define HOTEND_INDEX TERN(HAS_MULTI_HOTEND, e, 0)
 #define E_NAME TERN_(HAS_MULTI_HOTEND, e)
 
+
+#if ENABLED(RS_ADDSETTINGS)
+  typedef struct
+  {
+    const uint32_t    type;
+    const char        *name;
+    const temp_entry_t *table;
+    const uint32_t    table_size;
+    const celsius_t   fan_auto_temp;
+    const celsius_t   max_temp;
+    const bool        high_temp;
+  } thermistor_types_t;
+  extern const thermistor_types_t thermistor_types[];
+
+  typedef struct 
+  {
+    uint8_t     heater_type[HOTENDS];
+    celsius_t   fan_auto_temp[HOTENDS];
+    bool        high_temp[HOTENDS];
+    uint8_t     bed_type;
+  } thermistors_data_t;
+  extern thermistors_data_t thermistors_data;
+  
+  #define THERMISTORS_TYPES_COUNT 5
+  
+#endif  // RS_ADDSETTINGS
+
+
 // Element identifiers. Positive values are hotends. Negative values are other heaters or coolers.
 typedef enum : int8_t {
   H_REDUNDANT = HID_REDUNDANT,
@@ -359,7 +387,11 @@ class Temperature {
 
     #if HAS_HOTEND
       static hotend_info_t temp_hotend[HOTENDS];
-      static const celsius_t hotend_maxtemp[HOTENDS];
+      #if ENABLED(RS_ADDSETTINGS)
+        static celsius_t hotend_maxtemp[HOTENDS];
+      #else
+        static const celsius_t hotend_maxtemp[HOTENDS];
+      #endif
       static celsius_t hotend_max_target(const uint8_t e) { return hotend_maxtemp[e] - (HOTEND_OVERSHOOT); }
     #endif
     #if HAS_HEATED_BED
@@ -721,10 +753,17 @@ class Temperature {
       static void setTargetHotend(const celsius_t celsius, const uint8_t E_NAME) {
         const uint8_t ee = HOTEND_INDEX;
         #if MILLISECONDS_PREHEAT_TIME > 0
-          if (celsius == 0)
-            reset_preheat_time(ee);
-          else if (temp_hotend[ee].target == 0)
-            start_preheat_time(ee);
+          #if ENABLED(RS_ADDSETTINGS)
+          if (thermistor_types[thermistors_data.heater_type[ee]].high_temp == 1)
+          {
+          #endif
+            if (celsius == 0)
+              reset_preheat_time(ee);
+            else if (temp_hotend[ee].target == 0)
+              start_preheat_time(ee);
+          #if ENABLED(RS_ADDSETTINGS)
+          }
+          #endif
         #endif
         TERN_(AUTO_POWER_CONTROL, if (celsius) powerManager.power_on());
         temp_hotend[ee].target = _MIN(celsius, hotend_max_target(ee));
@@ -1053,23 +1092,3 @@ class Temperature {
 extern Temperature thermalManager;
 
 
-#if ENABLED(RS_ADDSETTINGS)
-  typedef struct
-  {
-    const uint32_t  type;
-    const char      *name;
-    const temp_entry_t *table;
-    const uint32_t  table_size;
-  } thermistor_types_t;
-  extern const thermistor_types_t thermistor_types[];
-
-  typedef struct 
-  {
-    uint8_t heater_type[HOTENDS];
-    uint8_t bed_type;
-  } thermistors_data_t;
-  extern thermistors_data_t thermistors_data;
-  
-  #define THERMISTORS_TYPES_COUNT 4
-  
-#endif  // RS_ADDSETTINGS

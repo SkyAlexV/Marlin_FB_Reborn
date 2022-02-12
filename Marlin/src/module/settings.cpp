@@ -542,7 +542,8 @@ typedef struct SettingsDataStruct {
 
   #if ENABLED(RS_ADDSETTINGS)
     planner_axinvert_t invert_axes;
-   thermistors_data_t thermistors_data;
+    thermistors_data_t thermistors_data;
+    celsius_t hotend_maxtemp[HOTENDS];
   #endif  // RS_ADDSETTINGS
 } SettingsData;
 
@@ -1535,7 +1536,10 @@ void MarlinSettings::postprocess() {
       EEPROM_WRITE(planner.invert_axis);
 
       // Thermistors type
-     EEPROM_WRITE(thermistors_data);
+      EEPROM_WRITE(thermistors_data);
+
+      // Max temperatures
+      EEPROM_WRITE(thermalManager.hotend_maxtemp);
     #endif  // RS_ADDSETTINGS
 
     //
@@ -2492,7 +2496,11 @@ void MarlinSettings::postprocess() {
         EEPROM_READ((uint8_t *)&planner.invert_axis, sizeof(planner.invert_axis));
 
         // Thermistors type
-       EEPROM_READ((uint8_t *)&thermistors_data, sizeof(thermistors_data));
+        EEPROM_READ((uint8_t *)&thermistors_data, sizeof(thermistors_data));
+
+        // Max temperatures
+        EEPROM_READ((uint8_t *)&thermalManager.hotend_maxtemp, sizeof(thermalManager.hotend_maxtemp));
+
       #endif  // RS_ADDSETTINGS
 
 
@@ -2738,6 +2746,7 @@ void MarlinSettings::reset() {
     planner.settings.max_acceleration_mm_per_s2[i] = pgm_read_dword(&_DMA[ALIM(i, _DMA)]);
     planner.settings.axis_steps_per_mm[i] = pgm_read_float(&_DASU[ALIM(i, _DASU)]);
     planner.settings.max_feedrate_mm_s[i] = pgm_read_float(&_DMF[ALIM(i, _DMF)]);
+    
     #if ENABLED(RS_ADDSETTINGS)
       // Motors DIR inverting
       planner.invert_axis.invert_axis[X_AXIS] = INVERT_X_DIR;
@@ -2747,17 +2756,33 @@ void MarlinSettings::reset() {
 
       // Thermistors type
       thermistors_data.heater_type[0] = 0;
+      thermistors_data.fan_auto_temp[0] = 50;
+      thermistors_data.high_temp[0] = 0;
+      thermalManager.hotend_maxtemp[0] = 300;
       #if (HOTENDS > 1)
         thermistors_data.heater_type[1] = 0;
+        thermistors_data.fan_auto_temp[1] = 50;
+        thermistors_data.high_temp[1] = 0;
+        thermalManager.hotend_maxtemp[0] = 300;
       #endif
       thermistors_data.bed_type = 0;
       for (uint8_t i = 0;  i < THERMISTORS_TYPES_COUNT; i++)
       {
         if (thermistor_types[i].type == TEMP_SENSOR_0)
+        {
           thermistors_data.heater_type[0] = i;
+          thermistors_data.fan_auto_temp[0] = thermistor_types[i].fan_auto_temp;
+          thermistors_data.high_temp[0] = thermistor_types[i].high_temp;
+          thermalManager.hotend_maxtemp[0] = thermistor_types[i].max_temp;
+        }
         #if (HOTENDS > 1)
           if (thermistor_types[i].type == TEMP_SENSOR_1)
+          {
             thermistors_data.heater_type[1] = i;
+            thermistors_data.fan_auto_temp[1] = thermistor_types[i].fan_auto_temp;
+            thermistors_data.high_temp[1] = thermistor_types[i].high_temp;
+            thermalManager.hotend_maxtemp[1] = thermistor_types[i].max_temp;
+          }
         #endif
         if (thermistor_types[i].type == TEMP_SENSOR_BED)
           thermistors_data.bed_type = i;

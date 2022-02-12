@@ -288,7 +288,7 @@ void MarlinUI::clear_lcd() {
   {
     celsius_t currentTemperature = thermalManager.wholeDegHotend(H_E0);
 
-    if (currentTemperature < EXTRUDER_AUTO_FAN_TEMPERATURE)
+    if (currentTemperature < thermistors_data.fan_auto_temp[0])
       gcode.process_subcommands_now(F("M81"));   // Power Off command
     if (extra_settings.sscreen_need_draw)
     {

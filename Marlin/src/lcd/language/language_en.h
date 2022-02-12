@@ -809,6 +809,8 @@ namespace Language_en {
     LSTR MSG_THEN_PRINTER_WILL_OFF          = _UxGT("The printer will then turn off.");
     LSTR MSG_PRESS_SCREEN_TO_CANCEL         = _UxGT("Tap the screen to cancel");
     LSTR MSG_INFO_WIFI_MENU                 = _UxGT("WiFi");
+
+    LSTR MSG_HOTEND_AUTO_FAN               = _UxGT("Hotend fan autoenable");
   #endif  // RS_STYLE_COLOR_UI
 
 

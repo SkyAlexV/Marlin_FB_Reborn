@@ -205,11 +205,14 @@ PGMSTR(str_t_heating_failed, STR_T_HEATING_FAILED);
 #if ENABLED(RS_ADDSETTINGS)
   thermistors_data_t thermistors_data;
 
-  constexpr thermistor_types_t    thermistor_types[THERMISTORS_TYPES_COUNT] PROGMEM = { {1, "Epcos 100k (1)", temptable_1, sizeof(temptable_1)/sizeof(*temptable_1)},
-                                                          {5, "ATC 104GT/104NT 100k (5)", temptable_5, sizeof(temptable_5)/sizeof(*temptable_5)},
-                                                          {13, "Hisens 3950 100k (13)", temptable_13, sizeof(temptable_13)/sizeof(*temptable_13)},
-                                                          {66, "Dyze D500 4.7M (66)", temptable_66, sizeof(temptable_66)/sizeof(*temptable_66)},
-                                                        };
+  constexpr thermistor_types_t    thermistor_types[THERMISTORS_TYPES_COUNT] PROGMEM = {
+    //  type,     name,                           table,          table size,                                     fan temp,   max temp,   high temp
+        {1,       "Epcos 100k (1)",               temptable_1,    sizeof(temptable_1)/sizeof(*temptable_1),       50,         300,        0},
+        {5,       "ATC 104GT/104NT 100k (5)",     temptable_5,    sizeof(temptable_5)/sizeof(*temptable_5),       50,         310,        0},
+        {13,      "Hisens 3950 100k (13)",        temptable_13,   sizeof(temptable_13)/sizeof(*temptable_13),     50,         330,        0},
+        {66,      "Dyze D500 4.7M (66)",          temptable_66,   sizeof(temptable_66)/sizeof(*temptable_66),     80,         530,        1},
+        {1047,    "Pt1000 4.7kΩ pullup (1047)",   temptable_1047, sizeof(temptable_1047)/sizeof(*temptable_1047), 70,         480,        1},
+      };
 #endif  // RS_ADDSETTINGS
 
 /**
@@ -305,7 +308,11 @@ PGMSTR(str_t_heating_failed, STR_T_HEATING_FAILED);
 #if HAS_HOTEND
   hotend_info_t Temperature::temp_hotend[HOTENDS];
   #define _HMT(N) HEATER_##N##_MAXTEMP,
-  const celsius_t Temperature::hotend_maxtemp[HOTENDS] = ARRAY_BY_HOTENDS(HEATER_0_MAXTEMP, HEATER_1_MAXTEMP, HEATER_2_MAXTEMP, HEATER_3_MAXTEMP, HEATER_4_MAXTEMP, HEATER_5_MAXTEMP, HEATER_6_MAXTEMP, HEATER_7_MAXTEMP);
+  #if ENABLED(RS_ADDSETTINGS)
+    celsius_t Temperature::hotend_maxtemp[HOTENDS] = ARRAY_BY_HOTENDS(HEATER_0_MAXTEMP, HEATER_1_MAXTEMP, HEATER_2_MAXTEMP, HEATER_3_MAXTEMP, HEATER_4_MAXTEMP, HEATER_5_MAXTEMP, HEATER_6_MAXTEMP, HEATER_7_MAXTEMP);
+  #else
+    const celsius_t Temperature::hotend_maxtemp[HOTENDS] = ARRAY_BY_HOTENDS(HEATER_0_MAXTEMP, HEATER_1_MAXTEMP, HEATER_2_MAXTEMP, HEATER_3_MAXTEMP, HEATER_4_MAXTEMP, HEATER_5_MAXTEMP, HEATER_6_MAXTEMP, HEATER_7_MAXTEMP);
+  #endif
 #endif
 
 #if HAS_TEMP_REDUNDANT
@@ -901,7 +908,7 @@ int16_t Temperature::getHeaterPower(const heater_id_t heater_id) {
 
     uint8_t fanState = 0;
     HOTEND_LOOP() {
-      if (temp_hotend[e].celsius >= EXTRUDER_AUTO_FAN_TEMPERATURE) {
+      if (temp_hotend[e].celsius >= thermistors_data.fan_auto_temp[e]) {
         SBI(fanState, pgm_read_byte(&fanBit[e]));
         #if MOTHERBOARD == BOARD_ULTIMAIN_2
           // For the UM2 the head fan is connected to PJ6, which does not have an Arduino PIN definition. So use direct register access.
@@ -1030,6 +1037,10 @@ void Temperature::_temp_error(const heater_id_t heater_id, FSTR_P const serial_m
     SERIAL_ERROR_START();
     SERIAL_ECHOF(serial_msg);
     SERIAL_ECHOPGM(STR_STOPPED_HEATER);
+    celsius_float_t temp = degHotend(heater_id);
+    SERIAL_ECHOLNPGM("Temperature: ", temp);
+    SERIAL_ECHOLNPGM("Rawtemp:",  temp_hotend[heater_id].raw);
+    SERIAL_ECHOLNPGM("RaW_MAX: ", temp_range[heater_id].raw_max);
 
     heater_id_t real_heater_id = heater_id;
 
@@ -2145,12 +2156,18 @@ void Temperature::updateTemperaturesFromRawValues() {
         const bool heater_on = temp_hotend[e].target > 0;
         if (heater_on && rawtemp < temp_range[e].raw_min * tdir && !is_preheating(e)) {
           #if MAX_CONSECUTIVE_LOW_TEMPERATURE_ERROR_ALLOWED > 1
+          #if ENABLED(RS_ADDSETTINGS)
+            if (thermistor_types[thermistors_data.heater_type[e]].high_temp == 1)
+          #endif
             if (++consecutive_low_temperature_error[e] >= MAX_CONSECUTIVE_LOW_TEMPERATURE_ERROR_ALLOWED)
           #endif
               min_temp_error((heater_id_t)e);
         }
         #if MAX_CONSECUTIVE_LOW_TEMPERATURE_ERROR_ALLOWED > 1
           else
+          #if ENABLED(RS_ADDSETTINGS)
+            if (thermistor_types[thermistors_data.heater_type[e]].high_temp == 1)
+          #endif
             consecutive_low_temperature_error[e] = 0;
         #endif
       }
@@ -2457,12 +2474,21 @@ void Temperature::init() {
       while (analog_to_celsius_hotend(temp_range[NR].raw_min, NR) < tmin) \
         temp_range[NR].raw_min += TEMPDIR(NR) * (OVERSAMPLENR); \
     }while(0)
-    #define _TEMP_MAX_E(NR) do{ \
-      const celsius_t tmax = _MIN(HEATER_##NR##_MAXTEMP, TERN(TEMP_SENSOR_##NR##_IS_CUSTOM, 2000, (int)pgm_read_word(&TEMPTABLE_##NR [TEMP_SENSOR_##NR##_MAXTEMP_IND].celsius) - 1)); \
-      temp_range[NR].maxtemp = tmax; \
-      while (analog_to_celsius_hotend(temp_range[NR].raw_max, NR) > tmax) \
-        temp_range[NR].raw_max -= TEMPDIR(NR) * (OVERSAMPLENR); \
-    }while(0)
+    #if ENABLED(RS_ADDSETTINGS)
+      #define _TEMP_MAX_E(NR) do{ \
+        const celsius_t tmax = _MIN((uint16_t)thermalManager.hotend_maxtemp[NR], TERN(TEMP_SENSOR_##NR##_IS_CUSTOM, 2000, (int)pgm_read_word(&TEMPTABLE_##NR [TEMP_SENSOR_##NR##_MAXTEMP_IND].celsius) - 1)); \
+        temp_range[NR].maxtemp = tmax; \
+        while (analog_to_celsius_hotend(temp_range[NR].raw_max, NR) > tmax) \
+          temp_range[NR].raw_max -= TEMPDIR(NR) * (OVERSAMPLENR); \
+      }while(0)
+    #else
+      #define _TEMP_MAX_E(NR) do{ \
+        const celsius_t tmax = _MIN(HEATER_##NR##_MAXTEMP, TERN(TEMP_SENSOR_##NR##_IS_CUSTOM, 2000, (int)pgm_read_word(&TEMPTABLE_##NR [TEMP_SENSOR_##NR##_MAXTEMP_IND].celsius) - 1)); \
+        temp_range[NR].maxtemp = tmax; \
+        while (analog_to_celsius_hotend(temp_range[NR].raw_max, NR) > tmax) \
+          temp_range[NR].raw_max -= TEMPDIR(NR) * (OVERSAMPLENR); \
+      }while(0)
+    #endif
 
     #define _MINMAX_TEST(N,M) (HOTENDS > N && TEMP_SENSOR_##N > 0 && TEMP_SENSOR_##N != 998 && TEMP_SENSOR_##N != 999 && defined(HEATER_##N##_##M##TEMP))
 

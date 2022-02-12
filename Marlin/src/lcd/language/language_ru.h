@@ -50,7 +50,7 @@ namespace Language_ru {
     LSTR  MSG_SD_INIT_FAIL                  = _UxGT("Сбой инициализ. SD");
   #endif
   LSTR  MSG_MEDIA_READ_ERROR                = _UxGT("Ошибка считывания");
-  LSTR  MSG_MEDIA_USB_REMOVED               = _UxGT("USB диск удалён");
+  LSTR  MSG_MEDIA_USB_REMOVED               = _UxGT("USB диск удален");
   LSTR  MSG_MEDIA_USB_FAILED                = _UxGT("Ошибка USB диска");
   #if LCD_WIDTH > 21 || HAS_DWIN_E3V2
     LSTR  MSG_KILL_SUBCALL_OVERFLOW         = _UxGT("Переполнение вызова");
@@ -110,7 +110,7 @@ namespace Language_ru {
     LSTR  MSG_PREHEAT_1_H                   = _UxGT("Нагреть для  ") PREHEAT_1_LABEL " ~";
     LSTR  MSG_PREHEAT_1_END                 = _UxGT("Нагреть для ") PREHEAT_1_LABEL _UxGT(" сопло");
     LSTR  MSG_PREHEAT_1_END_E               = _UxGT("Нагреть для ") PREHEAT_1_LABEL _UxGT(" сопло ~");
-    LSTR  MSG_PREHEAT_1_ALL                 = _UxGT("Нагреть для ") PREHEAT_1_LABEL _UxGT(" всё");
+    LSTR  MSG_PREHEAT_1_ALL                 = _UxGT("Нагреть для ") PREHEAT_1_LABEL _UxGT(" все");
     LSTR  MSG_PREHEAT_1_BEDONLY             = _UxGT("Нагреть для ") PREHEAT_1_LABEL _UxGT(" стол");
     LSTR  MSG_PREHEAT_1_SETTINGS            = _UxGT("Нагрев для ") PREHEAT_1_LABEL _UxGT(" изменить");
 
@@ -118,7 +118,7 @@ namespace Language_ru {
     LSTR  MSG_PREHEAT_M_H                   = _UxGT("Нагреть для $ ~");
     LSTR  MSG_PREHEAT_M_END                 = _UxGT("Нагреть для $ сопло");
     LSTR  MSG_PREHEAT_M_END_E               = _UxGT("Нагреть для $ сопло ~");
-    LSTR  MSG_PREHEAT_M_ALL                 = _UxGT("Нагреть для $ всё");
+    LSTR  MSG_PREHEAT_M_ALL                 = _UxGT("Нагреть для $ все");
     LSTR  MSG_PREHEAT_M_BEDONLY             = _UxGT("Нагреть для $ стол");
     LSTR  MSG_PREHEAT_M_SETTINGS            = _UxGT("Нагрев для $ изменить");
   #endif
@@ -148,7 +148,7 @@ namespace Language_ru {
   LSTR  MSG_LASER_ASSIST_TOGGLE             = _UxGT("Управление обдувом");
   LSTR  MSG_FLOWMETER_FAULT                 = _UxGT("Ошибка обдува");
   LSTR  MSG_LASER_FIRE_PULSE                = _UxGT("Импульс лазера");
-  LSTR  MSG_SPINDLE_FORWARD                 = _UxGT("Шпиндель вперёд");
+  LSTR  MSG_SPINDLE_FORWARD                 = _UxGT("Шпиндель вперед");
   LSTR  MSG_SPINDLE_REVERSE                 = _UxGT("Инверсия шпинделя");
 
   LSTR  MSG_SWITCH_PS_ON                    = _UxGT("Включить питание");
@@ -285,9 +285,9 @@ namespace Language_ru {
   LSTR  MSG_UBL_MANUAL_FILLIN               = _UxGT("Ручное заполнение");
   LSTR  MSG_UBL_SMART_FILLIN                = _UxGT("Умное заполнение");
   LSTR  MSG_UBL_FILLIN_MESH                 = _UxGT("Заполнить сетку");
-  LSTR  MSG_UBL_INVALIDATE_ALL              = _UxGT("Аннулировать всё");
+  LSTR  MSG_UBL_INVALIDATE_ALL              = _UxGT("Аннулировать все");
   LSTR  MSG_UBL_INVALIDATE_CLOSEST          = _UxGT("Аннулир. ближайшую");
-  LSTR  MSG_UBL_FINE_TUNE_ALL               = _UxGT("Точно править всё");
+  LSTR  MSG_UBL_FINE_TUNE_ALL               = _UxGT("Точно править все");
   LSTR  MSG_UBL_FINE_TUNE_CLOSEST           = _UxGT("Настр. ближ. точку");
   LSTR  MSG_UBL_STORAGE_MESH_MENU           = _UxGT("Хранилище сеток");
   LSTR  MSG_UBL_STORAGE_SLOT                = _UxGT("Слот памяти");
@@ -304,9 +304,9 @@ namespace Language_ru {
   LSTR  MSG_UBL_1_BUILD_COLD_MESH           = _UxGT("1.Строить холодную");
   LSTR  MSG_UBL_2_SMART_FILLIN              = _UxGT("2.Умное заполнение");
   LSTR  MSG_UBL_3_VALIDATE_MESH_MENU        = _UxGT("3.Проверить сетку");
-  LSTR  MSG_UBL_4_FINE_TUNE_ALL             = _UxGT("4.Точно настр. всё");
+  LSTR  MSG_UBL_4_FINE_TUNE_ALL             = _UxGT("4.Точно настр. все");
   LSTR  MSG_UBL_5_VALIDATE_MESH_MENU        = _UxGT("5.Проверить сетку");
-  LSTR  MSG_UBL_6_FINE_TUNE_ALL             = _UxGT("6.Точно настр. всё");
+  LSTR  MSG_UBL_6_FINE_TUNE_ALL             = _UxGT("6.Точно настр. все");
   LSTR  MSG_UBL_7_SAVE_MESH                 = _UxGT("7.Сохранить сетку");
 
   LSTR  MSG_LED_CONTROL                     = _UxGT("Настройка подсветки");
@@ -314,8 +314,8 @@ namespace Language_ru {
   LSTR  MSG_LED_PRESETS                     = _UxGT("Предустановки света");
   LSTR  MSG_SET_LEDS_RED                    = _UxGT("Красный");
   LSTR  MSG_SET_LEDS_ORANGE                 = _UxGT("Оранжевый");
-  LSTR  MSG_SET_LEDS_YELLOW                 = _UxGT("Жёлтый");
-  LSTR  MSG_SET_LEDS_GREEN                  = _UxGT("Зелёный");
+  LSTR  MSG_SET_LEDS_YELLOW                 = _UxGT("Желтый");
+  LSTR  MSG_SET_LEDS_GREEN                  = _UxGT("Зеленый");
   LSTR  MSG_SET_LEDS_BLUE                   = _UxGT("Синий");
   LSTR  MSG_SET_LEDS_INDIGO                 = _UxGT("Индиго");
   LSTR  MSG_SET_LEDS_VIOLET                 = _UxGT("Фиолетовый");
@@ -331,7 +331,7 @@ namespace Language_ru {
   LSTR  MSG_NEO2_BRIGHTNESS                 = _UxGT("Яркость");
   LSTR  MSG_CUSTOM_LEDS                     = _UxGT("Свой цвет подсветки");
   LSTR  MSG_INTENSITY_R                     = _UxGT("Уровень красного");
-  LSTR  MSG_INTENSITY_G                     = _UxGT("Уровень зелёного");
+  LSTR  MSG_INTENSITY_G                     = _UxGT("Уровень зеленого");
   LSTR  MSG_INTENSITY_B                     = _UxGT("Уровень синего");
   LSTR  MSG_INTENSITY_W                     = _UxGT("Уровень белого");
   LSTR  MSG_LED_BRIGHTNESS                  = _UxGT("Яркость");
@@ -372,7 +372,7 @@ namespace Language_ru {
   LSTR  MSG_LASER                           = _UxGT("Лазер");
   LSTR  MSG_FAN_SPEED                       = _UxGT("Обдув");
   LSTR  MSG_FAN_SPEED_N                     = _UxGT("Обдув ~");
-  LSTR  MSG_STORED_FAN_N                    = _UxGT("Сохранённый вент. ~");
+  LSTR  MSG_STORED_FAN_N                    = _UxGT("Сохраненный вент. ~");
   LSTR  MSG_EXTRA_FAN_SPEED                 = _UxGT("Доп. обдув");
   LSTR  MSG_EXTRA_FAN_SPEED_N               = _UxGT("Доп. обдув ~");
   LSTR  MSG_CONTROLLER_FAN                  = _UxGT("Контроллер вент.");
@@ -576,7 +576,7 @@ namespace Language_ru {
     LSTR  MSG_FILAMENTLOAD_E                = _UxGT("Подать пруток *");
     LSTR  MSG_FILAMENTUNLOAD_E              = _UxGT("Убрать пруток *");
   #endif
-  LSTR  MSG_FILAMENTUNLOAD_ALL              = _UxGT("Выгрузить всё");
+  LSTR  MSG_FILAMENTUNLOAD_ALL              = _UxGT("Выгрузить все");
   LSTR  MSG_ATTACH_MEDIA                    = _UxGT("Установить SD карту");
   LSTR  MSG_CHANGE_MEDIA                    = _UxGT("Сменить SD карту");
   LSTR  MSG_RELEASE_MEDIA                   = _UxGT("Освободить SD карту");
@@ -593,7 +593,7 @@ namespace Language_ru {
   LSTR  MSG_BLTOUCH_MODE_STORE              = _UxGT("Режим сохранения");
   LSTR  MSG_BLTOUCH_MODE_STORE_5V           = _UxGT("Установить на 5V");
   LSTR  MSG_BLTOUCH_MODE_STORE_OD           = _UxGT("Установить на OD");
-  LSTR  MSG_BLTOUCH_MODE_ECHO               = _UxGT("Слив отчёта");
+  LSTR  MSG_BLTOUCH_MODE_ECHO               = _UxGT("Слив отчета");
   LSTR  MSG_BLTOUCH_MODE_CHANGE             = _UxGT("ОПАСНОСТЬ: Неправильные параметры приводят к повреждениям! Продолжить?");
   LSTR  MSG_TOUCHMI_PROBE                   = _UxGT("Z-Зонд TouchMI");
   LSTR  MSG_TOUCHMI_INIT                    = _UxGT("Инициализация");
@@ -698,7 +698,7 @@ namespace Language_ru {
   LSTR  MSG_KILL_EXPECTED_PRINTER           = _UxGT("Неверный принтер");
 
   #if LCD_WIDTH > 21 || HAS_DWIN_E3V2
-    LSTR  MSG_INFO_PRINT_COUNT              = _UxGT("Счётчик печатей");
+    LSTR  MSG_INFO_PRINT_COUNT              = _UxGT("Счетчик печатей");
     LSTR  MSG_INFO_PRINT_TIME               = _UxGT("Общее время печати");
     LSTR  MSG_INFO_PRINT_LONGEST            = _UxGT("Наидольшая печать");
     LSTR  MSG_INFO_PRINT_FILAMENT           = _UxGT("Выдавлено прутка");
@@ -728,7 +728,7 @@ namespace Language_ru {
   LSTR  MSG_FILAMENT_CHANGE_HEADER_LOAD     = _UxGT("ЗАГРУЗКА ПРУТКА");
   LSTR  MSG_FILAMENT_CHANGE_HEADER_UNLOAD   = _UxGT("ВЫГРУЗКА ПРУТКА");
   LSTR  MSG_FILAMENT_CHANGE_OPTION_HEADER   = _UxGT("ОПЦИИ ПРОДОЛЖЕНИЯ:");
-  LSTR  MSG_FILAMENT_CHANGE_OPTION_PURGE    = _UxGT("Выдавить ещё");
+  LSTR  MSG_FILAMENT_CHANGE_OPTION_PURGE    = _UxGT("Выдавить еще");
   LSTR  MSG_FILAMENT_CHANGE_OPTION_RESUME   = _UxGT("Возобновить печать");
   LSTR  MSG_FILAMENT_CHANGE_NOZZLE          = _UxGT("  Сопла: ");
   #if LCD_WIDTH > 21 || HAS_DWIN_E3V2
@@ -751,7 +751,7 @@ namespace Language_ru {
   LSTR  MSG_MMU2_RESUME                     = _UxGT("Продолжить печать");
   LSTR  MSG_MMU2_RESUMING                   = _UxGT("Продолжение...");
   LSTR  MSG_MMU2_LOAD_FILAMENT              = _UxGT("Загрузить филамент");
-  LSTR  MSG_MMU2_LOAD_ALL                   = _UxGT("Загрузить всё");
+  LSTR  MSG_MMU2_LOAD_ALL                   = _UxGT("Загрузить все");
   LSTR  MSG_MMU2_LOAD_TO_NOZZLE             = _UxGT("Загрузить в сопло");
   LSTR  MSG_MMU2_EJECT_FILAMENT             = _UxGT("Извлечь филамент");
   LSTR  MSG_MMU2_EJECT_FILAMENT_N           = _UxGT("Извлечь филамент ~");
@@ -763,7 +763,7 @@ namespace Language_ru {
     LSTR  MSG_MMU2_EJECTING_FILAMENT        = _UxGT("Извлеч.филамента...");
   #endif
   LSTR  MSG_MMU2_UNLOADING_FILAMENT         = _UxGT("Выгрузка....");
-  LSTR  MSG_MMU2_ALL                        = _UxGT("Всё");
+  LSTR  MSG_MMU2_ALL                        = _UxGT("Все");
   LSTR  MSG_MMU2_FILAMENT_N                 = _UxGT("Филамент ~");
   LSTR  MSG_MMU2_RESET                      = _UxGT("Перезапуск MMU");
   LSTR  MSG_MMU2_RESETTING                  = _UxGT("Перезапуск MMU...");
@@ -830,7 +830,7 @@ namespace Language_ru {
   #else
     LSTR  MSG_REMINDER_SAVE_SETTINGS        = _UxGT("Запомни, сохрани!");
   #endif
-  LSTR  MSG_PASSWORD_REMOVED                = _UxGT("Пароль удалён");
+  LSTR  MSG_PASSWORD_REMOVED                = _UxGT("Пароль удален");
 
   //
   // Filament Change screens show up to 3 lines on a 4-line display
@@ -929,6 +929,8 @@ namespace Language_ru {
     LSTR MSG_WAIT_NOZZLE_COOL               = _UxGT("Ожидание остывания сопла.");
     LSTR MSG_THEN_PRINTER_WILL_OFF          = _UxGT("После этого принтер будет выключен.");
     LSTR MSG_PRESS_SCREEN_TO_CANCEL         = _UxGT("Нажмите на экран для отмены");
+
+    LSTR MSG_HOTEND_AUTO_FAN               = _UxGT("Автовкл. вент. хотэнда");
   #endif  // RS_STYLE_COLOR_UI
 
 }
