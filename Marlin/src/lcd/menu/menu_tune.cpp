@@ -245,7 +245,8 @@ void menu_tune() {
 */
 
   #if ENABLED(RS_ADDSETTINGS)
-    EDIT_ITEM(bool, MSG_POWEROFF_AT_END, &extra_settings.poweroff_at_printed);
+    if (psu_settings.psu_enabled)
+      EDIT_ITEM(bool, MSG_POWEROFF_AT_END, &autooff_settings.poweroff_at_printed);
   #endif  // RS_ADDSETTINGS
 
   END_MENU();

@@ -58,6 +58,8 @@
 #include "../lcd/tft/tft_string.h"
 #include "../libs/numtostr.h"
 
+#include "../feature/power.h"
+
 #if EITHER(EEPROM_SETTINGS, SD_FIRMWARE_UPDATE)
   #include "../HAL/shared/eeprom_api.h"
 #endif
@@ -541,14 +543,17 @@ typedef struct SettingsDataStruct {
   #endif
 
   #if ENABLED(RS_ADDSETTINGS)
-    planner_axinvert_t invert_axes;
-    thermistors_data_t thermistors_data;
-    celsius_t hotend_maxtemp[HOTENDS];
-  #endif  // RS_ADDSETTINGS
+    planner_axinvert_t      invert_axes;
+    thermistors_data_t      thermistors_data;
+    celsius_t               hotend_maxtemp[HOTENDS];
+    psu_settings_t          psu_settings;
+    endstop_settings_t      endstop_settings;
+#endif  // RS_ADDSETTINGS
 } SettingsData;
 
 #if ENABLED(RS_ADDSETTINGS)
-  extra_settings_t extra_settings;
+  autooff_settings_t    autooff_settings;
+  psu_settings_t        psu_settings;
 #endif  // RS_ADDSETTINGS
 
 //static_assert(sizeof(SettingsData) <= MARLIN_EEPROM_SIZE, "EEPROM too small to contain SettingsData!");
@@ -1540,6 +1545,12 @@ void MarlinSettings::postprocess() {
 
       // Max temperatures
       EEPROM_WRITE(thermalManager.hotend_maxtemp);
+
+      // Extra settings
+      EEPROM_WRITE(psu_settings);
+
+      // Endstops settings
+      EEPROM_WRITE(endstop_settings);
     #endif  // RS_ADDSETTINGS
 
     //
@@ -1578,8 +1589,8 @@ void MarlinSettings::postprocess() {
     TERN_(EXTENSIBLE_UI, ExtUI::onConfigurationStoreWritten(!eeprom_error));
 
     #if ENABLED(RS_ADDSETTINGS)
-      extra_settings.poweroff_at_printed = false;
-      extra_settings.sscreen_need_draw = true;
+      autooff_settings.poweroff_at_printed = false;
+      autooff_settings.sscreen_need_draw = true;
     #endif  // RS_ADDSETTINGS
 
     return !eeprom_error;
@@ -2501,6 +2512,11 @@ void MarlinSettings::postprocess() {
         // Max temperatures
         EEPROM_READ((uint8_t *)&thermalManager.hotend_maxtemp, sizeof(thermalManager.hotend_maxtemp));
 
+        // Extra settings
+        EEPROM_READ((uint8_t *)&psu_settings, sizeof(psu_settings));
+
+        // Endstops settings
+        EEPROM_READ((uint8_t *)&endstop_settings, sizeof(endstop_settings));
       #endif  // RS_ADDSETTINGS
 
 
@@ -2573,8 +2589,8 @@ void MarlinSettings::postprocess() {
     EEPROM_FINISH();
 
     #if ENABLED(RS_ADDSETTINGS)
-      extra_settings.poweroff_at_printed = false;
-      extra_settings.sscreen_need_draw = true;
+      autooff_settings.poweroff_at_printed = false;
+      autooff_settings.sscreen_need_draw = true;
     #endif  // RS_ADDSETTINGS
 
     return !eeprom_error;
@@ -2787,6 +2803,36 @@ void MarlinSettings::reset() {
         if (thermistor_types[i].type == TEMP_SENSOR_BED)
           thermistors_data.bed_type = i;
       }
+
+      // PSU settings
+      psu_settings.psu_enabled = false;
+
+      // Endstop settings
+      #if HAS_X_MIN
+        endstop_settings.X_MIN_INVERTING = X_MIN_ENDSTOP_INVERTING;
+      #endif
+      #if HAS_X_MAX
+        endstop_settings.X_MAX_INVERTING = X_MAX_ENDSTOP_INVERTING;
+      #endif
+      #if HAS_Y_MIN
+        endstop_settings.Y_MIN_INVERTING = Y_MIN_ENDSTOP_INVERTING;
+      #endif
+      #if HAS_Y_MAX
+        endstop_settings.Y_MAX_INVERTING = Y_MAX_ENDSTOP_INVERTING;
+      #endif
+      #if HAS_Z_MIN
+        endstop_settings.Z_MIN_INVERTING = Z_MIN_ENDSTOP_INVERTING;
+      #endif
+      #if HAS_Z_MAX
+        endstop_settings.Z_MAX_INVERTING = Z_MAX_ENDSTOP_INVERTING;
+      #endif
+      #if HAS_Z2_MIN
+        endstop_settings.Z2_MIN_INVERTING = Z2_MIN_ENDSTOP_INVERTING;
+      #endif
+      #if HAS_Z2_MAX
+        endstop_settings.Z2_MAX_INVERTING = Z2_MAX_ENDSTOP_INVERTING;
+      #endif
+
     #endif  // RS_ADDSETTINGS
   }
 
@@ -3251,8 +3297,8 @@ void MarlinSettings::reset() {
   DEBUG_ECHO_MSG("Hardcoded Default Settings Loaded");
 
   #if ENABLED(RS_ADDSETTINGS)
-    extra_settings.poweroff_at_printed = false;
-      extra_settings.sscreen_need_draw = true;
+    autooff_settings.poweroff_at_printed = false;
+    autooff_settings.sscreen_need_draw = true;
   #endif  // RS_ADDSETTINGS
 
 }

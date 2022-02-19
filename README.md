@@ -23,7 +23,7 @@
 
 
 ## Главное
-Обновлено 29.01.2022
+Обновлено 19.02.2022
 - WiFi интерфейс для управления принтером и передачи файлов
 - активирован Linear Advance
 - активирована возможность использовать встроенные в прошивку ретракты (командами G10, G11)
@@ -32,6 +32,7 @@
 - предусмотрено подключение модуля управления питанием (PSU) MKS PWC
 - добавлена настройка автоматического отключения питания по окончанию текущей печати (при подключенном модуле управления питанием)
 - добавлена настройка направления вращения моторов X/Y/Z/Z2/E
+- добавлена настройка инверсии концевиков
 - включена калибровка стола ("Выровнять стол" с ручной подгонкой высоты сопла по 9 точкам)
 - включена подстройка винтами стола по 4 точкам, соответствующим положению регулировочных винтов ("Выровнять углы")
 - исправлены все косяки вывода русскоязычных надписей
@@ -106,6 +107,18 @@
 К сожалению, настройка WiFi (имя точки доступа и пароль) пока никак не реализована. Чтобы настроить работу WiFi, нужно сделать это в родной прошивке (от MKS), после чего можно обновляться на эту прошивку. Параметры настройки сохранятся.
 
 ## История
+### 19.02.2022
+**v1.8**
+- исправлена ошибка в Марлине, из-за которой при неудачной калибровке тача дисплей зависал на экране с крестиками в левом верхнем и правом нижнем углах, не реагируя на нажатия
+- в меню Доп. настройки добавлен пункт настройки инверсии концевиков; это позволяет использовать неродные концевики, настраивая их режим работы
+- в выбор термисторов добавлен Pt1000 4.7kΩ pullup (1047)
+- с изменением типа термистора хотэнда меняется максимальная температура сопла (для каждого типа термистора - своя) и температура автоматического включения вентилятора радиатора
+- при выборе высокотемпературных термисторов (D500 и PT-1000) включаются дополнительные функции, обеспечивающие их нормальную работу - MAX_CONSECUTIVE_LOW_TEMPERATURE_ERROR_ALLOWED и MILLISECONDS_PREHEAT_TIME
+- температура автоматического включения вентилятора радиатора может быть изменена через настройки (Настройки - Доп. настройки - Температура)
+- в настройки вынесена активация модуля PSU; его отключение в настройках убирает пункты меню, относящиеся к управлению питанием, а так же блокирует отключение питания кнопкой или командой
+- увеличено до 10 количество циклов в калибровке ПИД нагревателей
+- из главного меню во время печати убраны пункты паузы/возобновления и остановки печати, и пункт тюнинга; эти действия доступны по кнопкам в главном окне
+
 ### 29.01.2022
 **v1.7**
 - на главный экран добавлены кнопки быстрого доступа к настройкам потока (flowrate) и скорости (feedrate) с показом текущего значения
@@ -207,6 +220,7 @@ Based on [Marlin 3D Printer Firmware](https://github.com/MarlinFirmware/Marlin) 
 - connection of the power management unit (PSU) MKS PWC is provided
 - added setting for automatic power off at the end of the current print job (if the power management module is connected)
 - added direction of rotation of motors X/Y/Z/Z2/E
+- added endstops inverting settings
 - the ability to use the retracts built into the firmware is activated (by commands G10, G11)
 - displaying a preview picture when selecting a file (PrusaSlicer preview is supported and only on Robin Nano v1.3 and Robin Nano S v1.3 boards)
 - table calibration is enabled ("Align the table" with manual adjustment of the nozzle height by 9 points)
@@ -283,6 +297,18 @@ Attention! Make sure your printer has a compatible control board!
 Unfortunately, the WiFi setting (hotspot name and password) has not been implemented yet. To set up WiFi, you need to do it in the native firmware (from MKS), after which you can update to this firmware. The settings will be saved.
 
 ## Version history
+### 02/19/2022
+**v1.8**
+- fixed a bug in Marlin, due to which, if the calibration of the touch was unsuccessful, the display freeze on the screen with crosses in the upper left and lower right corners, not responding to pressing
+- in the Advanced settings menu added setting for endstops inverting; this allows you to use non-stock endstop switches by setting their mode of operation
+- added Pt1000 4.7kΩ pullup (1047) to the thermistor selection
+- with a change in the type of hotend thermistor, changes the maximum temperature of the nozzle and the temperature of automatic activation of the radiator fan  (for each type of thermistor - its own)
+- when selecting high temperature thermistors (D500 and PT-1000), additional functions are enabled to ensure their normal operation - MAX_CONSECUTIVE_LOW_TEMPERATURE_ERROR_ALLOWED and MILLISECONDS_PREHEAT_TIME
+- the temperature of the automatic activation of the radiator fan can be changed in the settings (Settings - Advanced settings - Temperature)
+- the activation of the PSU module has been added to the settings; turning it off removes the menu items related to power management, and also blocks the power off button or command
+- increased to 10 the number of cycles in the calibration of PID heaters
+- from the main menu during printing, the Pause/Resume, Stop and Tuning items have been removed; these actions are available via buttons in the main window
+
 ### 01/29/2022
 **v1.7**
 - buttons for quick access to the settings of the flow (flowrate) and speed (feedrate) have been added to the main screen, with showing the current value

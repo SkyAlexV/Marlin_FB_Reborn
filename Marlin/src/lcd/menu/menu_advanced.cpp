@@ -30,6 +30,9 @@
 
 #include "menu_item.h"
 #include "../../module/planner.h"
+#include "../../module/settings.h"
+
+#include "../../module/endstops.h"
 
 #if DISABLED(NO_VOLUMETRICS)
   #include "../../gcode/parser.h"
@@ -60,6 +63,7 @@ void menu_backlash();
 
 #if ENABLED(RS_ADDSETTINGS)
   void menu_advanced_axesdir();
+  void menu_advanced_endstop_inverting();
 #endif
 
 
@@ -701,6 +705,7 @@ void menu_advanced_settings() {
 
   #if ENABLED(RS_ADDSETTINGS)
     SUBMENU(MSG_AXIS_DIRECTION, menu_advanced_axesdir);
+    SUBMENU(MSG_ENDSTOP_INVERTING, menu_advanced_endstop_inverting);
   #endif
 
   #if ENABLED(BACKLASH_GCODE)
@@ -755,6 +760,10 @@ void menu_advanced_settings() {
     SUBMENU(MSG_PASSWORD_SETTINGS, password.access_menu_password);
   #endif
 
+  #if ENABLED(RS_ADDSETTINGS)
+      EDIT_ITEM(bool, MSG_PSU_MODULE_ON, &psu_settings.psu_enabled);
+  #endif
+
   #if ENABLED(EEPROM_SETTINGS) && DISABLED(SLIM_LCD_MENUS)
     CONFIRM_ITEM(MSG_INIT_EEPROM,
       MSG_BUTTON_INIT, MSG_BUTTON_CANCEL,
@@ -779,6 +788,40 @@ void menu_advanced_settings() {
     EDIT_ITEM(bool, MSG_Z1_INVERT, &planner.invert_axis.invert_axis[Z_AXIS]);
     EDIT_ITEM(bool, MSG_Z2_INVERT, &planner.invert_axis.z2_vs_z_dir);
     EDIT_ITEM(bool, MSG_E_INVERT, &planner.invert_axis.invert_axis[E0_AXIS]);
+
+    END_MENU();
+  }
+
+
+  void menu_advanced_endstop_inverting()
+  {
+    START_MENU();
+    // BACK_ITEM(MSG_ADVANCED_SETTINGS);
+
+    #if HAS_X_MIN
+      EDIT_ITEM(bool, MSG_X_MIN_INVERTING, &endstop_settings.X_MIN_INVERTING);
+    #endif
+    #if HAS_X_MAX
+      EDIT_ITEM(bool, MSG_X_MAX_INVERTING, &endstop_settings.X_MAX_INVERTING);
+    #endif
+    #if HAS_Y_MIN
+      EDIT_ITEM(bool, MSG_Y_MIN_INVERTING, &endstop_settings.Y_MIN_INVERTING);
+    #endif
+    #if HAS_Y_MAX
+      EDIT_ITEM(bool, MSG_Y_MAX_INVERTING, &endstop_settings.Y_MAX_INVERTING);
+    #endif
+    #if HAS_Z_MIN
+      EDIT_ITEM(bool, MSG_Z_MIN_INVERTING, &endstop_settings.Z_MIN_INVERTING);
+    #endif
+    #if HAS_Z_MAX
+      EDIT_ITEM(bool, MSG_Z_MAX_INVERTING, &endstop_settings.Z_MAX_INVERTING);
+    #endif
+    #if HAS_Z2_MIN
+      EDIT_ITEM(bool, MSG_Z2_MIN_INVERTING, &endstop_settings.Z2_MIN_INVERTING);
+    #endif
+    #if HAS_Z2_MAX
+      EDIT_ITEM(bool, MSG_Z2_MAX_INVERTING, &endstop_settings.Z2_MAX_INVERTING);
+    #endif
 
     END_MENU();
   }

@@ -281,6 +281,7 @@ void menu_main() {
   #endif
 
   if (busy) {
+  /*
     #if MACHINE_CAN_PAUSE
       ACTION_ITEM(MSG_PAUSE_PRINT, ui.pause_print);
     #endif
@@ -293,13 +294,13 @@ void menu_main() {
         );
       });
     #endif
-
+*/
     #if ENABLED(GCODE_REPEAT_MARKERS)
       if (repeat.is_active())
         ACTION_ITEM(MSG_END_LOOPS, repeat.cancel);
     #endif
 
-    SUBMENU(MSG_TUNE, menu_tune);
+//    SUBMENU(MSG_TUNE, menu_tune);
 
     #if ENABLED(CANCEL_OBJECTS) && DISABLED(SLIM_LCD_MENUS)
       SUBMENU(MSG_CANCEL_OBJECT, []{ editable.int8 = -1; ui.goto_screen(menu_cancelobject); });
@@ -311,8 +312,8 @@ void menu_main() {
       sdcard_menu_items();
     #endif
 
-    if (TERN0(MACHINE_CAN_PAUSE, printingIsPaused()))
-      ACTION_ITEM(MSG_RESUME_PRINT, ui.resume_print);
+//    if (TERN0(MACHINE_CAN_PAUSE, printingIsPaused()))
+//      ACTION_ITEM(MSG_RESUME_PRINT, ui.resume_print);
 
     #if ENABLED(HOST_START_MENU_ITEM) && defined(ACTION_ON_START)
       ACTION_ITEM(MSG_HOST_START_PRINT, hostui.start);
@@ -325,7 +326,8 @@ void menu_main() {
     SUBMENU(MSG_MOTION, menu_motion);
 
     #if ENABLED(RS_ADDSETTINGS)
-      EDIT_ITEM(bool, MSG_POWEROFF_AT_END, &extra_settings.poweroff_at_printed);
+      if (psu_settings.psu_enabled)
+        EDIT_ITEM(bool, MSG_POWEROFF_AT_END, &autooff_settings.poweroff_at_printed);
     #endif  // RS_ADDSETTINGS
 
   }
@@ -385,18 +387,25 @@ void menu_main() {
   // Switch power on/off
   //
   #if ENABLED(PSU_CONTROL)
-    if (powerManager.psu_on)
-      #if ENABLED(PS_OFF_CONFIRM)
-        CONFIRM_ITEM(MSG_SWITCH_PS_OFF,
-          MSG_YES, MSG_NO,
-          ui.poweroff, nullptr,
-          GET_TEXT(MSG_SWITCH_PS_OFF), (const char *)nullptr, PSTR("?")
-        );
-      #else
-        GCODES_ITEM(MSG_SWITCH_PS_OFF, PSTR("M81"));
-      #endif
-    else
-      GCODES_ITEM(MSG_SWITCH_PS_ON, PSTR("M80"));
+    #if ENABLED(RS_ADDSETTINGS)
+      if (psu_settings.psu_enabled)
+      {
+    #endif
+      if (powerManager.psu_on)
+        #if ENABLED(PS_OFF_CONFIRM)
+          CONFIRM_ITEM(MSG_SWITCH_PS_OFF,
+            MSG_YES, MSG_NO,
+            ui.poweroff, nullptr,
+            GET_TEXT(MSG_SWITCH_PS_OFF), (const char *)nullptr, PSTR("?")
+          );
+        #else
+          GCODES_ITEM(MSG_SWITCH_PS_OFF, PSTR("M81"));
+        #endif
+      else
+        GCODES_ITEM(MSG_SWITCH_PS_ON, PSTR("M80"));
+    #if ENABLED(RS_ADDSETTINGS)
+      }
+    #endif
   #endif
 
   #if ENABLED(SDSUPPORT) && DISABLED(MEDIA_MENU_AT_TOP)

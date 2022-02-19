@@ -229,6 +229,7 @@ void MarlinUI::clear_lcd() {
     uint16_t x, y;
 
     calibrationState calibration_stage = touch_calibration.get_calibration_state();
+    SERIAL_ECHOLNPGM("CALIB_SCREEN: state - ", calibration_stage);
 
     if (calibration_stage == CALIBRATION_NONE) {
       defer_status_screen(true);
@@ -290,7 +291,7 @@ void MarlinUI::clear_lcd() {
 
     if (currentTemperature < thermistors_data.fan_auto_temp[0])
       gcode.process_subcommands_now(F("M81"));   // Power Off command
-    if (extra_settings.sscreen_need_draw)
+    if (autooff_settings.sscreen_need_draw)
     {
       defer_status_screen(true);  // предотвращаем переход в экран статуса по таймауту
       clear_lcd();
@@ -309,7 +310,7 @@ void MarlinUI::clear_lcd() {
       tft.canvas(0, 160, TFT_WIDTH, tft_string.font_height());
       tft.set_background(COLOR_BACKGROUND);
       tft.add_text(tft_string.center(TFT_WIDTH), 0, COLOR_MENU_TEXT, tft_string);
-      extra_settings.sscreen_need_draw = false;
+      autooff_settings.sscreen_need_draw = false;
     }
 
     tft_string.set(GET_TEXT(MSG_UBL_SET_TEMP_HOTEND));

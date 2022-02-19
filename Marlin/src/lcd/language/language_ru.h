@@ -922,15 +922,26 @@ namespace Language_ru {
       LSTR MSG_E_INVERT                     = STR_E _UxGT(" Инверсия");
 
       LSTR MSG_POWEROFF_AT_END              = _UxGT("Выключить после печати");
-
       LSTR MSG_MENU_THERMISTORS             = _UxGT("Типы термисторов");
+      LSTR MSG_HOTEND_AUTO_FAN              = _UxGT("Автовкл. вент. хотэнда");
+      LSTR MSG_PSU_MODULE_ON                = _UxGT("Модуль PSU подключен");
+
+      LSTR MSG_ENDSTOP_INVERTING            = _UxGT("Инверсия концевиков");
+      LSTR MSG_X_MIN_INVERTING              = _UxGT("X-Min инверсия");
+      LSTR MSG_X_MAX_INVERTING              = _UxGT("X-Max инверсия");
+      LSTR MSG_Y_MIN_INVERTING              = _UxGT("Y-Min инверсия");
+      LSTR MSG_Y_MAX_INVERTING              = _UxGT("Y-Max инверсия");
+      LSTR MSG_Z_MIN_INVERTING              = _UxGT("Z-Min инверсия");
+      LSTR MSG_Z_MAX_INVERTING              = _UxGT("Z-Max инверсия");
+      LSTR MSG_Z2_MIN_INVERTING             = _UxGT("Z2-Min инверсия");
+      LSTR MSG_Z2_MAX_INVERTING             = _UxGT("Z2-Max инверсия");
+
     #endif
 
     LSTR MSG_WAIT_NOZZLE_COOL               = _UxGT("Ожидание остывания сопла.");
     LSTR MSG_THEN_PRINTER_WILL_OFF          = _UxGT("После этого принтер будет выключен.");
     LSTR MSG_PRESS_SCREEN_TO_CANCEL         = _UxGT("Нажмите на экран для отмены");
 
-    LSTR MSG_HOTEND_AUTO_FAN               = _UxGT("Автовкл. вент. хотэнда");
   #endif  // RS_STYLE_COLOR_UI
 
 }

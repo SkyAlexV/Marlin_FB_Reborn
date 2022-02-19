@@ -74,7 +74,8 @@ void TouchCalibration::validate_calibration() {
   else {
     calibration_state = CALIBRATION_FAIL;
     calibration_reset();
-    if (need_calibration() && failed_count++ < TOUCH_CALIBRATION_MAX_RETRIES) calibration_state = CALIBRATION_TOP_LEFT;
+    if (need_calibration() && failed_count++ < TOUCH_CALIBRATION_MAX_RETRIES) calibration_state = CALIBRATION_NONE;
+    SERIAL_ECHOLNPGM("Touch screen calibration FAIL: ",  failed_count, " from ", TOUCH_CALIBRATION_MAX_RETRIES);
   }
   #undef CAL_PTS
 
@@ -98,8 +99,8 @@ bool TouchCalibration::handleTouch(uint16_t x, uint16_t y) {
   if (calibration_state < CALIBRATION_SUCCESS) {
     calibration_points[calibration_state].raw_x = x;
     calibration_points[calibration_state].raw_y = y;
-    DEBUG_ECHOLNPGM("TouchCalibration - State: ", calibration_state, ", x: ", calibration_points[calibration_state].x, ", raw_x: ", x, ", y: ", calibration_points[calibration_state].y, ", raw_y: ", y);
   }
+    SERIAL_ECHOLNPGM("TouchCalibration - State: ", calibration_state, ", x: ", calibration_points[calibration_state].x, ", raw_x: ", x, ", y: ", calibration_points[calibration_state].y, ", raw_y: ", y);
 
   switch (calibration_state) {
     case CALIBRATION_TOP_LEFT: calibration_state = CALIBRATION_BOTTOM_LEFT; break;

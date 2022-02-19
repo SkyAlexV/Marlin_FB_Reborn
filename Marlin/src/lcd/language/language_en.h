@@ -801,8 +801,20 @@ namespace Language_en {
       LSTR MSG_E_INVERT                     = STR_E _UxGT(" Invert");
 
       LSTR MSG_POWEROFF_AT_END              = _UxGT("Power off at print done");
-
       LSTR MSG_MENU_THERMISTORS             = _UxGT("Thermistors types");
+      LSTR MSG_HOTEND_AUTO_FAN              = _UxGT("Hotend fan autoenable");
+      LSTR MSG_PSU_MODULE_ON                = _UxGT("PSU module connected");
+
+      LSTR MSG_ENDSTOP_INVERTING            = _UxGT("Endstops inverting");
+      LSTR MSG_X_MIN_INVERTING              = _UxGT("X-Min inverting");
+      LSTR MSG_X_MAX_INVERTING              = _UxGT("X-Max inverting");
+      LSTR MSG_Y_MIN_INVERTING              = _UxGT("Y-Min inverting");
+      LSTR MSG_Y_MAX_INVERTING              = _UxGT("Y-Max inverting");
+      LSTR MSG_Z_MIN_INVERTING              = _UxGT("Z-Min inverting");
+      LSTR MSG_Z_MAX_INVERTING              = _UxGT("Z-Max inverting");
+      LSTR MSG_Z2_MIN_INVERTING             = _UxGT("Z2-Min inverting");
+      LSTR MSG_Z2_MAX_INVERTING             = _UxGT("Z2-Max inverting");
+
     #endif
 
     LSTR MSG_WAIT_NOZZLE_COOL               = _UxGT("Waiting for the nozzle to cool down.");
@@ -810,7 +822,6 @@ namespace Language_en {
     LSTR MSG_PRESS_SCREEN_TO_CANCEL         = _UxGT("Tap the screen to cancel");
     LSTR MSG_INFO_WIFI_MENU                 = _UxGT("WiFi");
 
-    LSTR MSG_HOTEND_AUTO_FAN               = _UxGT("Hotend fan autoenable");
   #endif  // RS_STYLE_COLOR_UI
 
 

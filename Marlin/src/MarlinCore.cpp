@@ -915,7 +915,12 @@ void minkill(const bool steppers_off/*=false*/) {
   // Power off all steppers (for M112) or just the E steppers
   steppers_off ? stepper.disable_all_steppers() : stepper.disable_e_steppers();
 
-  TERN_(PSU_CONTROL, powerManager.power_off());
+  #if ENABLED(PSU_CONTROL)
+    #if ENABLED(RS_ADDSETTINGS)
+      if (psu_settings.psu_enabled == true)
+    #endif
+        powerManager.power_off();
+  #endif
 
   TERN_(HAS_SUICIDE, suicide());
 

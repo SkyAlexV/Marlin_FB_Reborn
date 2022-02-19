@@ -120,10 +120,10 @@ void GcodeSuite::M1001() {
   TERN_(SD_REPRINT_LAST_SELECTED_FILE, ui.reselect_last_file());
 
   #if ENABLED(RS_ADDSETTINGS)
-    if (extra_settings.poweroff_at_printed)
+    if (autooff_settings.poweroff_at_printed && psu_settings.psu_enabled)
     {
-      extra_settings.sscreen_need_draw = true;
-      extra_settings.poweroff_at_printed = false;
+      autooff_settings.sscreen_need_draw = true;
+      autooff_settings.poweroff_at_printed = false;
       ui.goto_screen(ui.poweroff_wait_screen);
 //      gcode.process_subcommands_now_P(PSTR("M81"));   // Power Off command
     }
